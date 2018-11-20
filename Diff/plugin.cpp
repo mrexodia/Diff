@@ -46,11 +46,16 @@ static bool cbDiff(int argc, char* argv[])
         dprintf("sections are not same size %p != %p\n", fileData.size(), memData.size());
     }
     GuiReferenceInitialize("diff");
+	uint32_t differentBytes = 0;
     for (size_t i = 0; i < min(memData.size(), fileData.size()); i++)
     {
-        if (memData[i] != fileData[i])
-            DbgFunctions()->MemPatch(base + i, &fileData[i], 1);
+		if (memData[i] != fileData[i])
+		{
+			DbgFunctions()->MemPatch(base + i, &fileData[i], 1);
+			differentBytes++;
+		}
     }
+    dprintf("success, %u different bytes found!\n", differentBytes);
     GuiUpdateAllViews();
     return true;
 }
