@@ -47,12 +47,20 @@ static bool cbDiff(int argc, char* argv[])
     }
     GuiReferenceInitialize("diff");
 	uint32_t differentBytes = 0;
+	duint maximumPatches = 10000;
+	if (argc > 3)
+		maximumPatches = DbgValFromString(argv[3]);
     for (size_t i = 0; i < min(memData.size(), fileData.size()); i++)
     {
 		if (memData[i] != fileData[i])
 		{
 			DbgFunctions()->MemPatch(base + i, &fileData[i], 1);
 			differentBytes++;
+		}
+		if (!--maximumPatches)
+		{
+			dputs("too many patches, aborting");
+			break;
 		}
     }
     dprintf("success, %u different bytes found!\n", differentBytes);
