@@ -57,7 +57,7 @@ static bool cbDiff(int argc, char* argv[])
 			DbgFunctions()->MemPatch(base + i, &fileData[i], 1);
 			differentBytes++;
 		}
-		if (!--maximumPatches)
+		if (differentBytes >= maximumPatches)
 		{
 			dputs("too many patches, aborting");
 			break;
