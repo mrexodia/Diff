@@ -41,7 +41,10 @@ static bool cbDiff(int argc, char* argv[])
         dprintf("failed to read file '%s'\n", argv[2]);
         return false;
     }
-    if (fileData.size() != memData.size())
+    auto roundedSize = fileData.size();
+    roundedSize += 0xFFF;
+    roundedSize &= ~0xFFF;
+    if (roundedSize != memData.size())
     {
         dprintf("sections are not same size %p != %p\n", fileData.size(), memData.size());
     }
